@@ -1,8 +1,6 @@
 # AVLTree
 a basic Swift implementation of the [AVLTree](https://en.wikipedia.org/wiki/AVL_tree) data structure, a type of self-balancing binary search tree.
 
-It offers `O(log(n))` average and worst-case insertion and deletion of elements, where `n` is the number of elements contained in the tree.
+For an AVLTree containing `n` elements insertion and deletion of an element is performed in `O(log(n))` for both the average and worst case. 
 
-It offers ordered enumeration of the tree's elements in `O(n)` time.
-
-
+Since it is a binary tree ordered enumeration over each element is accomplished in `O(n)` time.

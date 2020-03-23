@@ -10,22 +10,25 @@ import XCTest
 import AVLTree
 
 class Tests: XCTestCase {
-
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testInsert() {
+        
     }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func testRemove() {
+        
     }
-
-    func testExample() {
-        let t = AVLTree<Int>()
-        for i in 1...500 {
-            let value = Int.random(in: 0...1000)
-            print("inserting \(value)")
-            t.insert(value)
+    func testValues() {
+        let tree = AVLTree<Int>()
+        for i in 1...10 {
+            tree.insert(i)
         }
-        print(t)
+        XCTAssertEqual(tree.values, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    }
+    func testIsEmpty() {
+        let tree = AVLTree<String>()
+        XCTAssertTrue(tree.isEmpty, "tree should begin empty.")
+        tree.insert("cat")
+        XCTAssertFalse(tree.isEmpty, "tree is not empty with cat in it.")
+        tree.remove("cat")
+        XCTAssertTrue(tree.isEmpty, "tree should be empty once cat is removed.")
     }
 }

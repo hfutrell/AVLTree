@@ -14,17 +14,7 @@ class Tests: XCTestCase {
     private func checkInvariants<T>(_ tree: AVLTree<T>) -> Bool {
         func height<T>(_ node: AVLNode<T>?) -> Int {
             guard let node = node else { return 0 }
-            if let left = node.left {
-                if let right = node.right {
-                    return 1 + max(height(left), height(right))
-                } else {
-                    return 1 + height(left)
-                }
-            } else if let right = node.right {
-                return 1 + height(right)
-            } else {
-                return 1
-            }
+            return 1 + max(height(node.left), height(node.right))
         }
         func checkInvariants<T>(_ node: AVLNode<T>) -> Bool {
             let leftHeight = height(node.left)
@@ -70,6 +60,8 @@ class Tests: XCTestCase {
         XCTAssertTrue(checkInvariants(tree))
     }
     func testRemove() {
+        let tree = AVLTree<Int>()
+        (1...10).forEach { tree.insert($0) }
         
     }
     func testIsEmpty() {

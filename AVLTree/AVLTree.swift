@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// A self-balancing binary search tree that maintains an ordered collection of elements with efficient `O(log(n))` insertion and deletion operations.
+/// A self-balancing binary search tree that maintains an ordered collection of elements with efficient `O(log(n))` `insert` and `remove` operations.
 public class AVLTree<T> where T: Comparable {
     internal var root: AVLNode<T>?
     /// creates an empty AVL Tree
@@ -97,19 +97,11 @@ internal class AVLNode<T> where T: Comparable {
     }
 
     internal func insert(_ value: T) -> AVLNode<T> {
-        
         defer { self.recalculateHeight() }
-        
         if value < self.value {
             if let left = self.left {
                 self.left = left.insert(value)
-                if self.balance > 1 {
-                    if let leftBalance = self.left?.balance, leftBalance > 0 {
-                        return self.rotateRight()
-                    } else {
-                        return self.rotateLeftRight()
-                    }
-                }
+                return self.rebalanceIfNeeded()
             } else {
                 self.left = AVLNode<T>(value)
                 return self
@@ -117,25 +109,18 @@ internal class AVLNode<T> where T: Comparable {
         } else {
             if let right = self.right {
                 self.right = right.insert(value)
-                if self.balance < -1 {
-                    if let rightBalance = self.right?.balance, rightBalance < 0 {
-                        return self.rotateLeft()
-                    } else {
-                        return self.rotateRightLeft()
-                    }
-                }
+                return self.rebalanceIfNeeded()
             } else {
                 self.right = AVLNode<T>(value)
                 return self
             }
         }
-        return self
     }
     
     /// for a subtree that has a left node, remove the leftmost node and return it
     private func removeLeftmostNode() -> AVLNode<T> {
         guard let left = self.left else {
-            assertionFailure("this only works on nodes with a left-child")
+            assertionFailure("this only works on nodes with a left child")
             return self
         }
         defer { self.recalculateHeight() }
@@ -144,6 +129,24 @@ internal class AVLNode<T> where T: Comparable {
         }
         self.left = left.right
         return left
+    }
+    
+    private func rebalanceIfNeeded() -> AVLNode<T> {
+        let balance = self.balance
+        if balance > 1 {
+            if let leftBalance = self.left?.balance, leftBalance > 0 {
+                return self.rotateRight()
+            } else {
+                return self.rotateLeftRight()
+            }
+        } else if balance < -1 {
+            if let rightBalance = self.right?.balance, rightBalance < 0 {
+                return self.rotateLeft()
+            } else {
+                return self.rotateRightLeft()
+            }
+        }
+        return self
     }
     
     internal func remove(_ value: T) -> AVLNode<T>? {

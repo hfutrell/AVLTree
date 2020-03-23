@@ -10,25 +10,39 @@ import XCTest
 import AVLTree
 
 class Tests: XCTestCase {
-    func testInsert() {
-        
-    }
-    func testRemove() {
-        
-    }
     func testValues() {
         let tree = AVLTree<Int>()
+        XCTAssertEqual(tree.values, [])
         for i in 1...10 {
             tree.insert(i)
         }
         XCTAssertEqual(tree.values, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     }
+    func testInsert() {
+        let tree = AVLTree<Int>()
+        XCTAssertEqual(tree.values, [])
+        tree.insert(3)
+        tree.insert(5)
+        tree.insert(9)  // should cause a left rotation
+        tree.insert(2)
+        tree.insert(1)  // should cause a right rotation
+        tree.insert(8)
+        tree.insert(10)
+        tree.insert(12)
+        tree.insert(11) // should cause a right-left rotation
+        tree.insert(6)
+        tree.insert(7)  // should cause a left-right rotation
+        XCTAssertEqual(tree.values, [1,2,3,5,6,7,8,9,10,11,12])
+    }
+    func testRemove() {
+        
+    }
     func testIsEmpty() {
         let tree = AVLTree<String>()
-        XCTAssertTrue(tree.isEmpty, "tree should begin empty.")
+        XCTAssertTrue(tree.isEmpty)
         tree.insert("cat")
-        XCTAssertFalse(tree.isEmpty, "tree is not empty with cat in it.")
+        XCTAssertFalse(tree.isEmpty)
         tree.remove("cat")
-        XCTAssertTrue(tree.isEmpty, "tree should be empty once cat is removed.")
+        XCTAssertTrue(tree.isEmpty)
     }
 }

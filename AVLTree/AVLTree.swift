@@ -40,7 +40,7 @@ public class AVLTree<T> where T: Comparable {
 }
 
 internal class AVLNode<T> where T: Comparable {
-    var height: Int = 0
+    var height: Int = 1
     var value: T
     var left, right: AVLNode?
         

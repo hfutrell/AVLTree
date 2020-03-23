@@ -10,7 +10,7 @@ import Foundation
 
 /// A self-balancing binary search tree that maintains an ordered collection of elements with efficient `O(log(n))` insertion and deletion operations.
 public class AVLTree<T> where T: Comparable {
-    private var root: AVLNode<T>?
+    internal var root: AVLNode<T>?
     /// creates an empty AVL Tree
     public init() { }
     /// inserts a value into the tree

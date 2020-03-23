@@ -60,9 +60,49 @@ class Tests: XCTestCase {
         XCTAssertTrue(checkInvariants(tree))
     }
     func testRemove() {
-        let tree = AVLTree<Int>()
-        (1...10).forEach { tree.insert($0) }
+        let tree = AVLTree<Double>()
+        tree.remove(1) // attempt to remove a value from empty tree
+        XCTAssertEqual(tree.values, [])
+
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(3)
+        tree.remove(2) // root should be replaced by right successor
+        XCTAssertEqual(tree.values, [1,3])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree.remove(3) // no-right successor, replace with left
+        XCTAssertEqual(tree.values, [1])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree.remove(1) // no-child nodes
+        XCTAssertEqual(tree.values, [])
+
+        tree.insert(3)
+        tree.insert(2)
+        tree.insert(5)
+        tree.insert(1)
+        tree.insert(4)
+        tree.insert(7)
+        tree.insert(6)
+        tree.remove(5) // remove from right sub-tree, replacing with 6
+        XCTAssertEqual(tree.values, [1,2,3,4,6,7])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree.remove(6) // remove 6, replacing it with 7
+        XCTAssertEqual(tree.values, [1,2,3,4,7])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree.remove(2) // remove 2, replacing it with 1
+        XCTAssertEqual(tree.values, [1,3,4,7])
+        XCTAssertTrue(checkInvariants(tree))
         
+        tree.insert(2)
+        tree.insert(8)
+        tree.insert(3.5)
+        tree.remove(3) // remove 3 by replacing it with 3.5
+        XCTAssertEqual(tree.values, [1,2,3.5,4,7,8])
+        XCTAssertTrue(checkInvariants(tree))
     }
     func testIsEmpty() {
         let tree = AVLTree<String>()

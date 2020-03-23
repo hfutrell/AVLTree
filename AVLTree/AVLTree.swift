@@ -132,25 +132,18 @@ internal class AVLNode<T> where T: Comparable {
         return self
     }
     
-    private func removeSuccessor() -> AVLNode<T>? {
-        defer { self.recalculateHeight() }
-        if let left = self.left {
-            if left.isLeaf {
-                self.left = nil
-                return left
-            } else {
-                return left.removeSuccessor()
-            }
-        } else if let right = self.right {
-            if right.isLeaf {
-                self.right = nil
-                return right
-            } else {
-                return right.removeSuccessor()
-            }
-        } else {
-            return nil // we are a leaf-node (no successor)
+    /// for a subtree that has a left node, remove the leftmost node and return it
+    private func removeLeftmostNode() -> AVLNode<T> {
+        guard let left = self.left else {
+            assertionFailure("this only works on nodes with a left-child")
+            return self
         }
+        defer { self.recalculateHeight() }
+        if let _ = left.left {
+            return left.removeLeftmostNode()
+        }
+        self.left = left.right
+        return left
     }
     
     internal func remove(_ value: T) -> AVLNode<T>? {
@@ -164,20 +157,25 @@ internal class AVLNode<T> where T: Comparable {
             self.right = right.remove(value)
             self.recalculateHeight()
             return self
-        } else {
-            if let sucessor = self.removeSuccessor() {
+        }
+        if let right = self.right {
+            let sucessor: AVLNode<T>
+            if let _ = right.left {
+                sucessor = right.removeLeftmostNode()
                 sucessor.left = self.left
                 sucessor.right = self.right
-                sucessor.recalculateHeight()
-                return sucessor
-            } else if let left = self.left {
-                // no successor node, replace self with left-child (if it exists)
-                return left
             } else {
-                // no child nodes
-                return nil
+                sucessor = right
+                sucessor.left = self.left
             }
+            sucessor.recalculateHeight()
+            return sucessor
+        } else if let left = self.left {
+            // no successor node, replace self with left-child (if it exists)
+            return left
         }
+        // no child nodes
+        return nil
     }
     
     internal func preorderTraversal(_ callback: (T) -> Void) {

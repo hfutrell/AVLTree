@@ -55,9 +55,7 @@ internal class AVLNode<T> where T: Comparable {
     var rightHeight: Int {
         return self.right?.height ?? 0
     }
-    
-    var isLeaf: Bool { return self.left == nil && self.right == nil }
-    
+        
     init(_ value: T) {
         self.value = value
     }

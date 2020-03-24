@@ -59,7 +59,8 @@ class Tests: XCTestCase {
         XCTAssertEqual(tree.values, [1,2,3,5,6,7,8,9,10,11,12])
         XCTAssertTrue(checkInvariants(tree))
     }
-    func testRemove() {
+    func testRemoveBasic() {
+        // basic removal test code that does not require rebalancing
         let tree = AVLTree<Double>()
         tree.remove(1) // attempt to remove a value from empty tree
         XCTAssertEqual(tree.values, [])
@@ -102,6 +103,63 @@ class Tests: XCTestCase {
         tree.insert(3.5)
         tree.remove(3) // remove 3 by replacing it with 3.5
         XCTAssertEqual(tree.values, [1,2,3.5,4,7,8])
+        XCTAssertTrue(checkInvariants(tree))
+    }
+    func testRemoveRebalance() {
+        var tree = AVLTree<Int>()
+        tree.insert(5)
+        tree.insert(4)
+        tree.insert(7)
+        tree.insert(3)
+        tree.insert(6)
+        tree.insert(8)
+        tree.insert(9)
+        tree.remove(5) // should be replaced with 6, causing a left-right rotation
+        XCTAssertEqual(tree.values, [3,4,6,7,8,9])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree = AVLTree<Int>()
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(4)
+        tree.insert(5)
+        tree.remove(1) // should cause a left rotation
+        XCTAssertEqual(tree.values, [2,4,5])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree = AVLTree<Int>()
+        tree.insert(3)
+        tree.insert(1)
+        tree.insert(4)
+        tree.insert(0)
+        tree.remove(4) // should cause a right rotation
+        XCTAssertEqual(tree.values, [0,1,3])
+        XCTAssertTrue(checkInvariants(tree))
+        
+        tree = AVLTree<Int>()
+        tree.insert(5)
+        tree.insert(3)
+        tree.insert(10)
+        tree.insert(2)
+        tree.insert(4)
+        tree.insert(7)
+        tree.insert(11)
+        tree.insert(1)
+        tree.insert(6)
+        tree.insert(9)
+        tree.insert(12)
+        tree.insert(8)
+        tree.remove(5) // root node gets replaced by 6, whose removal requires a rotation
+        XCTAssertEqual(tree.values, [1,2,3,4,6,7,8,9,10,11,12])
+        XCTAssertTrue(checkInvariants(tree))
+
+        tree = AVLTree<Int>()
+        tree.insert(3)
+        tree.insert(2)
+        tree.insert(4)
+        tree.insert(1)
+        tree.remove(3) // root node gets replaced by 4, and requires rotation
+        XCTAssertEqual(tree.values, [1,2,4])
         XCTAssertTrue(checkInvariants(tree))
     }
     func testIsEmpty() {

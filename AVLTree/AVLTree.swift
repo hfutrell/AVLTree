@@ -125,7 +125,9 @@ internal class AVLNode<T> where T: Comparable {
         }
         defer { self.recalculateHeight() }
         if let _ = left.left {
-            return left.removeLeftmostNode()
+            let result = left.removeLeftmostNode()
+            self.left = left.rebalanceIfNeeded()
+            return result
         }
         self.left = left.right
         return left
@@ -154,17 +156,18 @@ internal class AVLNode<T> where T: Comparable {
             // remove the value from the left sub-tree
             self.left = left.remove(value)
             self.recalculateHeight()
-            return self
+            return self.rebalanceIfNeeded()
         } else if value > self.value, let right = self.right {
             // remove the value from the right sub-tree
             self.right = right.remove(value)
             self.recalculateHeight()
-            return self
+            return self.rebalanceIfNeeded()
         }
         if let right = self.right {
             let sucessor: AVLNode<T>
             if let _ = right.left {
                 sucessor = right.removeLeftmostNode()
+                self.right = right.rebalanceIfNeeded()
                 sucessor.left = self.left
                 sucessor.right = self.right
             } else {
@@ -172,7 +175,7 @@ internal class AVLNode<T> where T: Comparable {
                 sucessor.left = self.left
             }
             sucessor.recalculateHeight()
-            return sucessor
+            return sucessor.rebalanceIfNeeded()
         } else if let left = self.left {
             // no successor node, replace self with left-child (if it exists)
             return left
